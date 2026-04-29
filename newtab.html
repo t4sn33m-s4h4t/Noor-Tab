@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Tab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body class="theme-dark">
+
+  <div id="bg-image"></div>
+  <div class="vignette"></div>
+
+  <!-- Top Left: Clock + left sidebar buttons -->
+  <div class="top-left" id="clock-widget">
+    <div id="clock-time"></div>
+    <div id="clock-date"></div>
+    <div class="left-btns">
+      <button class="left-open-btn" id="salah-btn" title="Salah Tracker">
+        <span>☪</span><span>Salah</span>
+        <span class="left-btn-badge hidden" id="salah-badge"></span>
+      </button>
+      <button class="left-open-btn" id="habits-btn" title="Habit Tracker">
+        <span>🎯</span><span>Habits</span>
+        <span class="left-btn-badge hidden" id="habits-badge"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Top Right -->
+  <div class="top-right">
+    <button class="icon-btn" id="stats-btn" title="Stats">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="3" width="4" height="18"/><rect x="10" y="8" width="4" height="13"/><rect x="2" y="13" width="4" height="8"/></svg>
+    </button>
+    <button class="icon-btn" id="settings-btn" title="Settings">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+  </div>
+
+  <!-- MAIN SPLIT LAYOUT -->
+  <div class="page-split">
+    <div class="split-top" id="quran-half">
+      <div class="quran-widget" id="quran-widget">
+        <div class="quran-scroll-inner">
+          <div class="quran-arabic" id="quran-arabic"></div>
+          <div class="quran-translation" id="quran-translation"></div>
+          <div class="quran-bangla" id="quran-bangla"></div>
+        </div>
+        <div class="quran-bottom-bar">
+          <div class="quran-ref" id="quran-ref"></div>
+          <div class="quran-actions">
+            <button class="quran-action-btn" id="quran-copy-btn" title="Copy verse">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+            <button class="quran-action-btn" id="quran-audio-btn" title="Play recitation">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            </button>
+            <button class="quran-action-btn" id="quran-fav-btn" title="Save to favourites">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+            <button class="quran-action-btn" id="quran-reload-btn" title="Load new verse">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="quran-copy-toast" id="quran-copy-toast">Copied!</div>
+        <div class="quran-fav-toast" id="quran-fav-toast">❤️ Saved!</div>
+      </div>
+    </div>
+
+    <div class="split-bottom" id="links-half">
+      <div class="bottom-scroll-area">
+        <div class="tab-nav glass" id="links-section">
+          <button class="tab-btn active" data-tab="links">Links</button>
+          <button class="tab-btn" data-tab="bookmarks">Bookmarks</button>
+        </div>
+        <div class="tab-panel" id="tab-links">
+          <div class="links-grid" id="links-grid"></div>
+          <button class="add-link-btn" id="add-link-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Link
+          </button>
+        </div>
+        <div class="tab-panel hidden" id="tab-bookmarks">
+          <div class="bookmarks-container" id="bookmarks-container"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRAYER TIMES CARD -->
+  <div class="prayer-card glass" id="prayer-card">
+    <div class="prayer-card-header">
+      <div class="prayer-card-title">
+        <span>🕌</span><span>Prayer Times</span>
+      </div>
+      <div class="prayer-card-controls">
+        <span class="prayer-card-city" id="prayer-city">--</span>
+        <button class="prayer-ctrl-btn" id="prayer-location-btn" title="Set location">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 13 8 13s8-7.75 8-13a8 8 0 0 0-8-8z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="prayer-next-big" id="prayer-next-big">
+      <div class="prayer-next-big-name" id="prayer-next-big-name">--</div>
+      <div class="prayer-next-big-time hidden" id="prayer-next-big-time">--:-- --</div>
+      <div class="prayer-next-countdown" id="prayer-next-countdown">--:--:--</div>
+    </div>
+    <div class="prayer-card-list" id="prayer-list">
+      <div class="prayer-hint">Tap 📍 to load prayer times</div>
+    </div>
+  </div>
+
+  <!-- Prayer location modal -->
+  <div class="modal-overlay hidden" id="prayer-modal-overlay">
+    <div class="modal glass">
+      <h3>Set Prayer Location</h3>
+      <label class="settings-label">City Name
+        <input type="text" id="prayer-city-input" class="settings-input" placeholder="e.g. Dhaka, London, New York">
+      </label>
+      <p class="modal-geo-row">Or use <button id="prayer-geo-btn" class="geo-link-btn">📍 my current location</button></p>
+      <div class="modal-actions">
+        <button class="cancel-btn" id="prayer-modal-cancel">Cancel</button>
+        <button class="save-btn" id="prayer-modal-save">Load Times</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDEBARS -->
+  <div class="sidebar glass" id="stats-sidebar">
+    <div class="sidebar-header">
+      <h3>Today's Activity</h3>
+      <div class="sidebar-header-actions">
+        <button class="stats-clear-btn" id="stats-clear-btn" title="Clear all activity">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          Clear
+        </button>
+        <button class="close-btn" id="stats-close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div class="stats-content" id="stats-content"></div>
+  </div>
+
+  <div class="sidebar glass settings-sidebar" id="settings-sidebar">
+    <div class="sidebar-header">
+      <h3>Settings</h3>
+      <button class="close-btn" id="settings-close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="settings-content">
+
+      <div class="settings-section">
+        <h4>General</h4>
+        <label class="settings-label">Your Name
+          <input type="text" id="setting-name" class="settings-input" placeholder="Your name">
+        </label>
+        <label class="settings-label">Theme
+          <select id="setting-theme" class="settings-select">
+            <option value="dark">🌑 Dark (Default)</option>
+            <option value="light">☀️ Light</option>
+            <option value="amoled">⚫ AMOLED Black</option>
+            <option value="ocean">🌊 Ocean Depths</option>
+            <option value="forest">🌿 Forest</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="settings-section">
+        <h4>Visibility</h4>
+        <label class="toggle-row"><span>Show Clock</span>
+          <label class="toggle-switch"><input type="checkbox" id="vis-clock" checked><span class="toggle-knob"></span></label>
+        </label>
+        <label class="toggle-row"><span>Show Links Section</span>
+          <label class="toggle-switch"><input type="checkbox" id="vis-links" checked><span class="toggle-knob"></span></label>
+        </label>
+        <label class="toggle-row"><span>Show Links &amp; Bookmarks Tabs</span>
+          <label class="toggle-switch"><input type="checkbox" id="vis-links-tab" checked><span class="toggle-knob"></span></label>
+        </label>
+        <label class="toggle-row"><span>Show Stats Button</span>
+          <label class="toggle-switch"><input type="checkbox" id="vis-stats" checked><span class="toggle-knob"></span></label>
+        </label>
+        <label class="toggle-row"><span>Show Prayer Times Card</span>
+          <label class="toggle-switch"><input type="checkbox" id="vis-prayer" checked><span class="toggle-knob"></span></label>
+        </label>
+        <label class="toggle-row"><span>Show Salah Tracker</span>
+          <label class="toggle-switch"><input type="checkbox" id="vis-salah" checked><span class="toggle-knob"></span></label>
+        </label>
+        <label class="toggle-row"><span>Show Habit Tracker</span>
+          <label class="toggle-switch"><input type="checkbox" id="vis-habits" checked><span class="toggle-knob"></span></label>
+        </label>
+      </div>
+
+      <div class="settings-section">
+        <h4>Links &amp; Icons</h4>
+        <label class="settings-label">Icon Size
+          <div class="slider-row">
+            <input type="range" id="setting-icon-size" min="24" max="64" value="32" class="settings-range">
+            <span class="slider-val" id="icon-size-val">32px</span>
+          </div>
+        </label>
+        <label class="settings-label">Icons Per Row (0 = auto)
+          <input type="number" id="setting-icons-per-row" class="settings-input" min="1" max="20" placeholder="Auto (leave blank)">
+        </label>
+      </div>
+
+      <div class="settings-section">
+        <h4>Layout Sizes</h4>
+        <label class="settings-label">Quran Section Height
+          <div class="slider-row">
+            <input type="range" id="setting-quran-size" min="10" max="80" value="33" class="settings-range">
+            <span class="slider-val" id="quran-size-val">33%</span>
+          </div>
+        </label>
+        <p class="setting-hint">Links section takes the remaining space.</p>
+      </div>
+
+      <div class="settings-section">
+        <h4>Quran Verse of the Day</h4>
+        <label class="toggle-row"><span>Show Quran Verse</span>
+          <label class="toggle-switch"><input type="checkbox" id="vis-quran" checked><span class="toggle-knob"></span></label>
+        </label>
+        <label class="settings-label settings-label-mt">Change verse every
+          <select id="setting-quran-interval" class="settings-select">
+            <option value="daily">Every day (default)</option>
+            <option value="weekly">Every week</option>
+            <option value="manual">Manual only</option>
+          </select>
+        </label>
+        <div class="setting-sub-label">Show / hide parts:</div>
+        <div class="quran-lang-grid">
+          <label class="quran-lang-check"><input type="checkbox" id="quran-show-arabic" checked> Arabic Text</label>
+          <label class="quran-lang-check"><input type="checkbox" id="quran-show-english" checked> English Translation</label>
+          <label class="quran-lang-check"><input type="checkbox" id="quran-show-bangla" checked> Bangla Translation</label>
+          <label class="quran-lang-check"><input type="checkbox" id="quran-show-ref" checked> Surah Name &amp; Verse Number</label>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h4>Dhikr Reminder</h4>
+        <label class="toggle-row"><span>Enable Dhikr Reminders</span>
+          <label class="toggle-switch"><input type="checkbox" id="dhikr-enabled"><span class="toggle-knob"></span></label>
+        </label>
+        <label class="settings-label settings-label-mt">Show reminder every
+          <select id="dhikr-interval" class="settings-select">
+            <option value="5">5 minutes</option>
+            <option value="10">10 minutes</option>
+            <option value="15" selected>15 minutes</option>
+            <option value="30">30 minutes</option>
+            <option value="60">60 minutes</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="settings-section">
+        <h4>Background (Unsplash)</h4>
+        <label class="settings-label">Category / Search Term
+          <input type="text" id="setting-category" class="settings-input" placeholder="e.g. nature, city, abstract">
+        </label>
+        <label class="settings-label">Unsplash Access Key
+          <input type="password" id="setting-unsplash-key" class="settings-input" placeholder="Paste your Access Key here" autocomplete="off">
+        </label>
+        <label class="settings-label">Change Image Every
+          <select id="setting-bg-interval" class="settings-select">
+            <option value="0">Every new tab open</option>
+            <option value="10">Every 10 minutes</option>
+            <option value="30" selected>Every 30 minutes ✦ Recommended</option>
+            <option value="60">Every 1 hour</option>
+            <option value="1440">Once per day</option>
+          </select>
+        </label>
+        <p class="bg-note">⭐ 30 min recommended — stays within Unsplash's 50 req/hr free limit.</p>
+        <div class="info-box info-box-mt">
+          <strong>How to get your Access Key:</strong>
+          <ol>
+            <li>Go to <a href="https://unsplash.com/developers" target="_blank" rel="noopener noreferrer" class="info-link">unsplash.com/developers</a></li>
+            <li>Click "Your Apps" → "New Application"</li>
+            <li>Accept terms and fill in app details</li>
+            <li>Copy your <strong>Access Key</strong> (NOT Secret Key)</li>
+            <li>Paste it above and save</li>
+          </ol>
+        </div>
+        <label class="settings-label settings-label-mt2">Background Blur Intensity
+          <div class="slider-row">
+            <input type="range" id="setting-blur" min="0" max="40" value="22" class="settings-range">
+            <span class="slider-val" id="blur-val">22px</span>
+          </div>
+        </label>
+        <button class="reload-bg-btn" id="reload-bg-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          Reload Background Now
+        </button>
+      </div>
+
+      <div class="settings-section">
+        <h4>Backup &amp; Restore</h4>
+        <p class="setting-hint">Export all your links, bookmarks, notes, settings and favourites to a JSON file.</p>
+        <div class="backup-btn-row">
+          <button class="backup-btn export-btn" id="export-backup-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export Backup
+          </button>
+          <button class="backup-btn import-btn" id="import-backup-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Import Backup
+          </button>
+        </div>
+      </div>
+
+      <button class="save-btn" id="settings-save">Save Settings</button>
+      <p class="save-feedback" id="save-feedback"></p>
+      <div class="settings-credit">
+        <a href="https://www.facebook.com/t4sn33m.s4h4t/" target="_blank" rel="noopener noreferrer">Tasneem Sahat</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEFT SIDEBARS -->
+  <div class="left-sidebar glass" id="salah-sidebar">
+    <div class="sidebar-header">
+      <h3>🕌 Salah Tracker</h3>
+      <button class="close-btn" id="salah-close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="salah-content">
+      <div class="salah-streak glass">
+        <div class="salah-streak-flame">🔥</div>
+        <div class="salah-streak-info">
+          <span class="salah-streak-count" id="salah-streak-count">0</span>
+          <span class="salah-streak-label">day streak</span>
+        </div>
+        <div class="salah-streak-sub" id="salah-streak-sub">Complete all 5 prayers to build your streak</div>
+      </div>
+      <div class="salah-date" id="salah-date"></div>
+      <div class="salah-prayers" id="salah-prayers"></div>
+      <div class="salah-progress-wrap">
+        <div class="salah-progress-bar-bg"><div class="salah-progress-bar" id="salah-progress-bar"></div></div>
+        <span class="salah-progress-text" id="salah-progress-text">0 / 5 prayed</span>
+      </div>
+      <p class="salah-reset-note">Resets automatically at midnight</p>
+    </div>
+  </div>
+
+  <div class="left-sidebar glass" id="habits-sidebar">
+    <div class="sidebar-header">
+      <h3>🎯 Habit Tracker</h3>
+      <button class="close-btn" id="habits-close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="habits-content" id="habits-content"></div>
+    <div class="habits-footer">
+      <button class="add-habit-btn" id="add-habit-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Habit
+      </button>
+    </div>
+  </div>
+
+  <!-- Favourite Verses Panel (right sidebar) -->
+  <div class="sidebar glass favverses-sidebar" id="favverses-sidebar">
+    <div class="sidebar-header">
+      <h3>❤️ Favourite Verses</h3>
+      <button class="close-btn" id="favverses-close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="favverses-content" id="favverses-content">
+      <p class="favverses-empty">No favourites yet. Tap ❤️ on a verse to save it.</p>
+    </div>
+  </div>
+
+  <!-- MODALS -->
+  <div class="modal-overlay hidden" id="link-modal-overlay">
+    <div class="modal glass">
+      <h3 id="modal-title">Add Link</h3>
+      <label class="settings-label">URL<input type="url" id="modal-url" class="settings-input" placeholder="https://example.com"></label>
+      <label class="settings-label">Name (optional)<input type="text" id="modal-name" class="settings-input" placeholder="Leave blank to auto-detect"></label>
+      <label class="settings-label">Custom Icon URL (optional)
+        <input type="url" id="modal-icon" class="settings-input" placeholder="https://example.com/icon.png">
+        <span class="input-hint">Leave blank to use favicon automatically</span>
+      </label>
+      <div class="modal-actions">
+        <button class="cancel-btn" id="modal-cancel">Cancel</button>
+        <button class="save-btn" id="modal-save">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay hidden" id="habit-modal-overlay">
+    <div class="modal glass">
+      <h3 id="habit-modal-title">Add Habit</h3>
+      <label class="settings-label">Habit Name<input type="text" id="habit-modal-name" class="settings-input" placeholder="e.g. No smoking, Exercise, Read"></label>
+      <label class="settings-label">Emoji Icon (optional)<input type="text" id="habit-modal-emoji" class="settings-input" placeholder="e.g. 🚭 💪 📚" maxlength="4"></label>
+      <div class="modal-actions">
+        <button class="cancel-btn" id="habit-modal-cancel">Cancel</button>
+        <button class="save-btn" id="habit-modal-save">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dhikr-backdrop" id="dhikr-backdrop"></div>
+  <!-- Dhikr popup -->
+  <div class="dhikr-popup glass hidden" id="dhikr-popup">
+    <div class="dhikr-popup-text" id="dhikr-popup-text">سُبْحَانَ اللّهِ</div>
+    <div class="dhikr-popup-latin" id="dhikr-popup-latin">SubhanAllah</div>
+    <div class="dhikr-popup-meaning" id="dhikr-popup-meaning">Glory be to Allah</div>
+    <button class="dhikr-popup-close" id="dhikr-popup-close">✕</button>
+  </div>
+
+  <!-- FABs -->
+  <div class="fab-stack">
+    <button class="notes-fab" id="favverses-fab" title="Favourite Verses">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    </button>
+    <button class="notes-fab" id="notes-fab" title="Quick Notes">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    </button>
+  </div>
+
+  <div class="notes-panel glass hidden" id="notes-panel">
+    <div class="notes-header">
+      <span class="notes-title">📝 Quick Notes</span>
+      <div class="notes-header-actions">
+        <span class="notes-saved-indicator" id="notes-saved"></span>
+        <button class="notes-clear-btn" id="notes-clear" title="Clear notes">🗑️</button>
+        <button class="close-btn" id="notes-close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <textarea class="notes-textarea" id="notes-textarea" placeholder="Start typing… your notes are saved automatically."></textarea>
+    <div class="notes-footer"><span id="notes-charcount" class="notes-charcount">0 chars</span></div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/clock.js"></script>
+  <script src="js/background_img.js"></script>
+  <script src="js/links.js"></script>
+  <script src="js/bookmarks.js"></script>
+  <script src="js/stats.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/salah.js"></script>
+  <script src="js/habits.js"></script>
+  <script src="js/quran.js"></script>
+  <script src="js/prayer_times.js"></script>
+  <script src="js/dhikr.js"></script>
+  <script src="js/notes.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
