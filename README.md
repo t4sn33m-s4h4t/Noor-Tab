@@ -211,12 +211,7 @@ noor_tab_v2/
 | Poppins (Google Fonts, bundled locally) | UI typography |
 
 ---
-
-## 👩‍💻 Author
-
-Made with ❤️ by **Tasneem Sahat**
-
----
+ 
 
 ## 📄 License
 
