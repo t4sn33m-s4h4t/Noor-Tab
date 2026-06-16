@@ -1,12 +1,18 @@
 {
   "manifest_version": 3,
   "name": "Noor Tab — Islamic New Tab",
-  "version": "1.3.0",
-  "description": "A beautiful Islamic new tab. Daily Quran verse with Alafasy audio, live prayer times for any city, 5-prayer Salah tracker with streaks, Dhikr reminders on all pages, habit tracker, favourite verses, quick notes, site usage stats, and stunning Unsplash backgrounds — all in a glassmorphism design with 5 themes.",
+  "version": "2.0.0",
+  "description": "Islamic new tab: daily Quran verse, prayer times, Salah & habit tracker, notes, browser lock.",
   "chrome_url_overrides": { "newtab": "newtab.html" },
   "background": { "service_worker": "js/background.js" },
-  "content_scripts": [{ "matches": ["<all_urls>"], "js": ["js/content.js"], "run_at": "document_idle" }],
-  "permissions": ["storage", "tabs", "bookmarks", "alarms", "geolocation", "scripting"],
+  "permissions": [
+    "storage",
+    "tabs",
+    "windows",
+    "bookmarks",
+    "alarms",
+    "geolocation"
+  ],
   "host_permissions": [
     "https://api.alquran.cloud/*",
     "https://cdn.islamic.network/*",
@@ -15,8 +21,28 @@
     "https://api.aladhan.com/*",
     "https://nominatim.openstreetmap.org/*",
     "https://api.unsplash.com/*",
-    "https://www.google.com/s2/favicons*"
+    "https://www.google.com/s2/favicons*",
+    "https://duckduckgo.com/*"
   ],
-  "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
-  "action": { "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" } }
+  "icons": {
+    "16":  "icons/icon16.png",
+    "32":  "icons/icon32.png",
+    "48":  "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16":  "icons/icon16.png",
+      "32":  "icons/icon32.png",
+      "48":  "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_popup": "pages/popup.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["pages/*.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }

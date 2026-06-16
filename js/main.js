@@ -1,75 +1,104 @@
 // main.js — App orchestration
-
-// ── Tab Switching ─────────────────────────────────────────
+// ── Tab switching ─────────────────────────────────────────────
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const target = btn.dataset.tab;
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-    document.getElementById('tab-links').classList.toggle('hidden', target !== 'links');
-    document.getElementById('tab-bookmarks').classList.toggle('hidden', target !== 'bookmarks');
+    document.getElementById('tab-links').classList.toggle('hidden', target!=='links');
+    document.getElementById('tab-bookmarks').classList.toggle('hidden', target!=='bookmarks');
   });
 });
 
-// ── Sidebars ──────────────────────────────────────────────
-const statsSidebar     = document.getElementById('stats-sidebar');
-const settingsSidebar  = document.getElementById('settings-sidebar');
-const salahSidebar     = document.getElementById('salah-sidebar');
-const habitsSidebar    = document.getElementById('habits-sidebar');
-const favversesSidebar = document.getElementById('favverses-sidebar');
+// ── Sidebars ──────────────────────────────────────────────────
+const SIDEBARS = {
+  stats:     document.getElementById('stats-sidebar'),
+  settings:  document.getElementById('settings-sidebar'),
+  salah:     document.getElementById('salah-sidebar'),
+  habits:    document.getElementById('habits-sidebar'),
+  favverses: document.getElementById('favverses-sidebar'),
+};
+const ALL_SIDEBARS = Object.values(SIDEBARS);
 
-const ALL_SIDEBARS = [statsSidebar, settingsSidebar, salahSidebar, habitsSidebar, favversesSidebar];
+function closeAllSidebars() { ALL_SIDEBARS.forEach(s=>s&&s.classList.remove('open')); }
 
-function closeAllSidebars() { ALL_SIDEBARS.forEach(s => s && s.classList.remove('open')); }
 function toggleSidebar(sb) {
   const isOpen = sb.classList.contains('open');
   closeAllSidebars();
   if (!isOpen) sb.classList.add('open');
 }
 
+// Settings panel z-index boost
+function updateSettingsZIndex() {
+  const statsBtn    = document.getElementById('stats-btn');
+  const settingsBtn = document.getElementById('settings-btn');
+  const open        = SIDEBARS.settings.classList.contains('open');
+  if (statsBtn)    statsBtn.style.zIndex    = open ? '25' : '';
+  if (settingsBtn) settingsBtn.style.zIndex = open ? '25' : '';
+}
+
 document.getElementById('stats-btn').addEventListener('click', () => {
-  toggleSidebar(statsSidebar);
-  if (statsSidebar.classList.contains('open') && typeof renderStats === 'function') renderStats();
+  toggleSidebar(SIDEBARS.stats);
+  if (SIDEBARS.stats.classList.contains('open') && typeof renderStats==='function') renderStats();
 });
-document.getElementById('stats-close').addEventListener('click', () => statsSidebar.classList.remove('open'));
+document.getElementById('stats-close').addEventListener('click', ()=>SIDEBARS.stats.classList.remove('open'));
 
-document.getElementById('settings-btn').addEventListener('click', () => toggleSidebar(settingsSidebar));
+document.getElementById('settings-btn').addEventListener('click', () => {
+  toggleSidebar(SIDEBARS.settings);
+  updateSettingsZIndex();
+});
 document.getElementById('settings-close').addEventListener('click', () => {
-  settingsSidebar.classList.remove('open');
-  if (typeof window.revertSettingsToSaved === 'function') window.revertSettingsToSaved();
+  SIDEBARS.settings.classList.remove('open');
+  updateSettingsZIndex();
+  if (typeof window.revertSettingsToSaved==='function') window.revertSettingsToSaved();
 });
 
-document.getElementById('salah-btn').addEventListener('click', () => toggleSidebar(salahSidebar));
-document.getElementById('salah-close').addEventListener('click', () => salahSidebar.classList.remove('open'));
-
-document.getElementById('habits-btn').addEventListener('click', () => toggleSidebar(habitsSidebar));
-document.getElementById('habits-close').addEventListener('click', () => habitsSidebar.classList.remove('open'));
-
-document.getElementById('favverses-fab').addEventListener('click', () => {
-  toggleSidebar(favversesSidebar);
-  if (favversesSidebar.classList.contains('open') && typeof renderFavVerses === 'function') renderFavVerses();
+// Only close ONE sidebar at a time — clicking salah when habits is open just opens salah
+document.getElementById('salah-btn').addEventListener('click', () => {
+  const isOpen = SIDEBARS.salah.classList.contains('open');
+  // Close only left sidebars (salah, habits); leave right sidebars alone
+  SIDEBARS.salah.classList.remove('open');
+  SIDEBARS.habits.classList.remove('open');
+  if (!isOpen) SIDEBARS.salah.classList.add('open');
 });
-document.getElementById('favverses-close').addEventListener('click', () => favversesSidebar.classList.remove('open'));
+document.getElementById('salah-close').addEventListener('click',  ()=>SIDEBARS.salah.classList.remove('open'));
 
-// ── Close on background click ─────────────────────────────
+document.getElementById('habits-btn').addEventListener('click', () => {
+  const isOpen = SIDEBARS.habits.classList.contains('open');
+  SIDEBARS.salah.classList.remove('open');
+  SIDEBARS.habits.classList.remove('open');
+  if (!isOpen) SIDEBARS.habits.classList.add('open');
+});
+document.getElementById('habits-close').addEventListener('click', ()=>SIDEBARS.habits.classList.remove('open'));
+
+document.getElementById('favverses-fab').addEventListener('click', e => {
+  e.stopPropagation();
+  toggleSidebar(SIDEBARS.favverses);
+  if (SIDEBARS.favverses.classList.contains('open') && typeof renderFavVerses==='function') renderFavVerses();
+});
+document.getElementById('favverses-close').addEventListener('click', e => {
+  e.stopPropagation();
+  SIDEBARS.favverses.classList.remove('open');
+});
+// Stop ALL clicks inside the favverses sidebar from bubbling to document
+SIDEBARS.favverses.addEventListener('click', e => e.stopPropagation());
+
+// ── Close on background click ─────────────────────────────────
 document.addEventListener('click', e => {
-  const triggers = ['stats-btn','settings-btn','salah-btn','habits-btn','favverses-fab','notes-fab'];
-  const inSidebar  = e.target.closest('.sidebar, .favverses-sidebar');
-  const inTrigger  = triggers.some(id => e.target.closest(`#${id}`));
-  const inNotesPanel = e.target.closest('#notes-panel');
-  const inPrayerCard = e.target.closest('#prayer-card');
-  const inModal    = e.target.closest('.modal-overlay');
-  if (!inSidebar && !inTrigger && !inNotesPanel && !inPrayerCard && !inModal) closeAllSidebars();
+  const triggers    = ['stats-btn','settings-btn','salah-btn','habits-btn','favverses-fab','notes-fab'];
+  const inSidebar   = e.target.closest('.sidebar,.favverses-sidebar,.left-sidebar');
+  const inTrigger   = triggers.some(id=>e.target.closest(`#${id}`));
+  const inNotesPanel= e.target.closest('#notes-panel');
+  const inPrayerCard= e.target.closest('#prayer-card');
+  const inModal     = e.target.closest('.modal-overlay');
+  const inSearch    = e.target.closest('#search-bar-wrap');
+  if (!inSidebar && !inTrigger && !inNotesPanel && !inPrayerCard && !inModal && !inSearch) closeAllSidebars();
 });
 
-// ── Escape ────────────────────────────────────────────────
+// ── Escape ────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
+  if (e.key==='Escape') {
     closeAllSidebars();
-    document.getElementById('link-modal-overlay').classList.add('hidden');
-    document.getElementById('habit-modal-overlay').classList.add('hidden');
-    const po = document.getElementById('prayer-modal-overlay');
-    if (po) po.classList.add('hidden');
-    // notes handled in notes.js
+    document.getElementById('global-modal-root')?.querySelectorAll('.modal-overlay').forEach(m=>m.remove());
   }
 });

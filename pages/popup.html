@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Noor Tab</title>
+  <link rel="stylesheet" href="../css/fonts.css">
+  <style>
+    body { min-width:180px; padding:12px 14px; font-family:'Inter',sans-serif; background:#141828; color:#e0e6ff; }
+    h3 { font-size:0.9rem; font-weight:600; margin:0 0 10px; color:#7eb8f7; }
+    .popup-btn { display:flex; align-items:center; gap:8px; width:100%; padding:8px 10px; border-radius:9px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.06); color:#e0e6ff; font-size:0.82rem; cursor:pointer; transition:all 0.15s; margin-bottom:6px; }
+    .popup-btn:hover { background:rgba(255,255,255,0.12); }
+  </style>
+</head>
+<body>
+  <h3>🌙 Noor Tab</h3>
+  <button class="popup-btn" id="open-lock-btn">🔒 Lock Settings</button>
+  <button class="popup-btn" id="open-newtab-btn">🏠 Open New Tab</button>
+  <script src="../js/storage.js"></script>
+  <script>
+    document.getElementById('open-lock-btn').addEventListener('click', () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL('pages/lock-settings.html') });
+    });
+    document.getElementById('open-newtab-btn').addEventListener('click', () => {
+      chrome.tabs.create({ url: 'chrome://newtab' });
+    });
+  </script>
+</body>
+</html>

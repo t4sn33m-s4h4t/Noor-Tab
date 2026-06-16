@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Locked</title>
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="../css/lock.css">
+</head>
+<body class="lockscreen-body" id="lockscreen-body">
+  <!-- Completely blank. Only the hidden auto-focused input exists. -->
+  <!-- The user knows to type their password and press Enter. -->
+  <!-- 5 wrong attempts = 5 min lockout. -->
+  <input
+    type="password"
+    id="lock-input"
+    autocomplete="off"
+    autocorrect="off"
+    autocapitalize="off"
+    spellcheck="false"
+    tabindex="1"
+    aria-hidden="true"
+  >
+  <!-- Subtle lockout message — only appears on lockout -->
+  <div id="lockout-msg" class="lockout-msg hidden"></div>
+
+  <script src="../js/lockscreen.js"></script>
+</body>
+</html>

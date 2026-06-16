@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noor Tab — Lock Settings</title>
+  <link rel="stylesheet" href="../css/fonts.css">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/lock.css">
+</head>
+<body class="theme-dark lock-settings-body">
+
+  <div class="lock-settings-container glass">
+
+    <div class="lock-settings-header">
+      <span class="lock-icon-big">🔒</span>
+      <h1>Browser Lock</h1>
+      <p class="lock-subtitle">Protect your browser with a password</p>
+    </div>
+
+    <!-- Status row -->
+    <div class="lock-section" id="lock-status-section">
+      <div class="lock-status-row">
+        <span id="lock-status-text">Lock is <strong>disabled</strong></span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="lock-enabled-chk">
+          <span class="toggle-knob"></span>
+        </label>
+      </div>
+      <p class="setting-hint" style="margin-top:10px">When enabled, Chrome shows a blank lock screen on startup and when all windows are closed. Press <strong>F1</strong> on the lock screen to answer security questions if you forget your password.</p>
+    </div>
+
+    <div id="lock-form-section">
+
+      <!-- SET PASSWORD -->
+      <div id="lock-setup-block" class="lock-block">
+        <h3>🔑 Set Password</h3>
+        <label class="settings-label">New Password
+          <input type="password" id="new-password" class="settings-input" placeholder="At least 4 characters" autocomplete="new-password">
+        </label>
+        <label class="settings-label settings-label-mt">Confirm Password
+          <input type="password" id="confirm-password" class="settings-input" placeholder="Re-enter password" autocomplete="new-password">
+        </label>
+        <p class="error-msg hidden" id="pass-error"></p>
+        <button class="save-btn" id="set-password-btn">Set Password</button>
+      </div>
+
+      <!-- CHANGE PASSWORD -->
+      <div id="lock-change-block" class="lock-block hidden">
+        <h3>🔑 Change Password</h3>
+        <label class="settings-label">Current Password
+          <input type="password" id="current-password" class="settings-input" placeholder="Your current password" autocomplete="current-password">
+        </label>
+        <label class="settings-label settings-label-mt">New Password
+          <input type="password" id="change-new-password" class="settings-input" placeholder="New password" autocomplete="new-password">
+        </label>
+        <label class="settings-label settings-label-mt">Confirm New Password
+          <input type="password" id="change-confirm-password" class="settings-input" placeholder="Confirm new password" autocomplete="new-password">
+        </label>
+        <p class="error-msg hidden" id="change-pass-error"></p>
+        <button class="save-btn" id="change-password-btn">Change Password</button>
+        <button class="lock-remove-btn" id="remove-password-btn">Remove Password &amp; Disable Lock</button>
+      </div>
+
+      <!-- SECURITY QUESTIONS -->
+      <div id="lock-security-block" class="lock-block hidden">
+        <h3>🛡 Security Questions <span class="hint-tag">Recover if you forget your password</span></h3>
+
+        <label class="settings-label">Question 1
+          <select id="sq1-q" class="settings-select">
+            <option value="0">What was the name of your first pet?</option>
+            <option value="1">What city were you born in?</option>
+            <option value="2">What is the name of the street you grew up on?</option>
+            <option value="3">What was the name of your primary school?</option>
+            <option value="4">What is your oldest sibling's middle name?</option>
+            <option value="5">What was the make of your first car?</option>
+            <option value="6">In what city did your parents meet?</option>
+            <option value="7">What was your childhood nickname?</option>
+          </select>
+        </label>
+        <label class="settings-label settings-label-mt">Answer 1
+          <input type="text" id="sq1-a" class="settings-input" placeholder="Case-insensitive" autocomplete="off">
+        </label>
+
+        <label class="settings-label settings-label-mt2">Question 2
+          <select id="sq2-q" class="settings-select">
+            <option value="0">What was the name of your first pet?</option>
+            <option value="1">What city were you born in?</option>
+            <option value="2">What is the name of the street you grew up on?</option>
+            <option value="3">What was the name of your primary school?</option>
+            <option value="4">What is your oldest sibling's middle name?</option>
+            <option value="5">What was the make of your first car?</option>
+            <option value="6">In what city did your parents meet?</option>
+            <option value="7">What was your childhood nickname?</option>
+          </select>
+        </label>
+        <label class="settings-label settings-label-mt">Answer 2
+          <input type="text" id="sq2-a" class="settings-input" placeholder="Case-insensitive" autocomplete="off">
+        </label>
+
+        <p class="error-msg hidden" id="sq-error"></p>
+        <button class="save-btn" id="save-sq-btn">Save Security Questions</button>
+      </div>
+    </div>
+
+    <div id="lock-global-msg" class="lock-msg hidden"></div>
+
+    <div class="lock-settings-footer">
+      <a href="#" id="close-lock-settings" class="back-link">← Back to New Tab</a>
+    </div>
+
+  </div>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/lock-settings.js"></script>
+</body>
+</html>

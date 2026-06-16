@@ -1,12 +1,14 @@
-// background.js — Service worker: time tracking + midnight reset + dhikr alarms
-
+// background.js — Service worker: stats + browser lock only. MV3 compliant.
 const STATS_KEY      = 'siteStats';
 const STATS_DATE_KEY = 'siteStatsDate';
+const LOCK_HASH_KEY  = 'lockHash';
+const LOCK_ENABLED   = 'lockEnabled';
+const LOCK_SESSION   = 'lockSession';
 
-let activeTabId   = null;
-let activeUrl     = null;
+let activeTabId    = null;
+let activeUrl      = null;
 let lastActiveTime = null;
-let _dhikrIdx     = 0;
+let dmsArmed       = true;
 
 function getDomain(url) {
   if (!url) return null;
@@ -15,10 +17,6 @@ function getDomain(url) {
     if (['chrome:', 'chrome-extension:', 'about:', 'moz-extension:'].includes(u.protocol)) return null;
     return u.hostname.replace(/^www\./, '');
   } catch { return null; }
-}
-
-function isExtensionId(str) {
-  return /^[a-z0-9]{32}$/i.test(str);
 }
 
 async function checkReset() {
@@ -30,7 +28,7 @@ async function checkReset() {
 }
 
 async function recordTime(domain, seconds) {
-  if (!domain || seconds <= 0 || isExtensionId(domain)) return;
+  if (!domain || seconds <= 0) return;
   await checkReset();
   const data  = await chrome.storage.local.get([STATS_KEY]);
   const stats = data[STATS_KEY] || {};
@@ -47,7 +45,7 @@ function flushCurrentTab() {
   lastActiveTime = null;
 }
 
-chrome.tabs.onActivated.addListener(async (info) => {
+chrome.tabs.onActivated.addListener(async info => {
   flushCurrentTab();
   activeTabId = info.tabId;
   try {
@@ -64,15 +62,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   lastActiveTime = Date.now();
 });
 
-chrome.windows.onFocusChanged.addListener((windowId) => {
-  if (windowId === chrome.windows.WINDOW_ID_NONE) {
-    flushCurrentTab();
-  } else {
-    lastActiveTime = Date.now();
-  }
-});
-
-// Flush every 30s as safety net
 setInterval(() => {
   if (activeUrl && lastActiveTime) {
     const domain  = getDomain(activeUrl);
@@ -84,48 +73,81 @@ setInterval(() => {
   }
 }, 30000);
 
-// ── Dhikr alarm (fires on all pages) ─────────────────
-async function scheduleDhikrAlarm() {
-  const data = await chrome.storage.local.get(['dhikrEnabled', 'dhikrInterval']);
-  chrome.alarms.clear('dhikr-reminder');
-  if (data.dhikrEnabled) {
-    const mins = parseInt(data.dhikrInterval) || 15;
-    chrome.alarms.create('dhikr-reminder', { delayInMinutes: mins, periodInMinutes: mins });
+// ── Browser Lock ──────────────────────────────────────────────
+let _savedSession = null;
+
+async function lockBrowser() {
+  const data = await chrome.storage.local.get([LOCK_ENABLED, LOCK_HASH_KEY]);
+  if (!data[LOCK_ENABLED] || !data[LOCK_HASH_KEY]) return;
+
+  const windows = await chrome.windows.getAll({ populate: true });
+  const session = windows.map(w => ({
+    focused: w.focused,
+    tabs: (w.tabs || []).filter(t => t.url && !t.url.startsWith('chrome-extension://')).map(t => t.url)
+  })).filter(w => w.tabs.length > 0);
+
+  _savedSession = session;
+  await chrome.storage.local.set({ [LOCK_SESSION]: session });
+
+  const lockWin = await chrome.windows.create({
+    url: chrome.runtime.getURL('pages/lockscreen.html'),
+    type: 'popup',
+    state: 'fullscreen'
+  });
+
+  for (const w of windows) {
+    try { await chrome.windows.remove(w.id); } catch {}
   }
 }
 
-// Re-schedule when settings change
-chrome.storage.onChanged.addListener((changes) => {
-  if ('dhikrEnabled' in changes || 'dhikrInterval' in changes) {
-    scheduleDhikrAlarm();
+async function unlockBrowser() {
+  const data    = await chrome.storage.local.get([LOCK_SESSION]);
+  const session = data[LOCK_SESSION] || _savedSession || [];
+  await chrome.storage.local.remove([LOCK_SESSION]);
+
+  if (session.length) {
+    for (const winData of session) {
+      if (!winData.tabs || !winData.tabs.length) continue;
+      try {
+        await chrome.windows.create({ url: winData.tabs, focused: true });
+      } catch {}
+    }
+  } else {
+    // No saved session — open a new tab in a new window
+    try { await chrome.windows.create({ url: 'chrome://newtab', focused: true }); } catch {}
+  }
+  // NOTE: do NOT close the lock window here — lockscreen.js calls window.close() itself
+}
+
+// ── Message handler ───────────────────────────────────────────
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.type === 'DMS_CHECK') {
+    const fire = dmsArmed; dmsArmed = false;
+    sendResponse({ shouldFire: fire }); return true;
+  }
+  if (msg.type === 'LOCK_BROWSER') {
+    lockBrowser(); return true;
+  }
+  if (msg.type === 'UNLOCK_BROWSER') {
+    unlockBrowser().then(() => sendResponse({ ok: true })); return true;
   }
 });
 
-chrome.alarms.onAlarm.addListener(async (alarm) => {
+// ── Alarms ────────────────────────────────────────────────────
+chrome.alarms.onAlarm.addListener(alarm => {
   if (alarm.name === 'midnight-reset') {
     chrome.storage.local.set({ [STATS_KEY]: {}, [STATS_DATE_KEY]: new Date().toDateString() });
   }
-  if (alarm.name === 'dhikr-reminder') {
-    // Send message to all tabs
-    const tabs = await chrome.tabs.query({});
-    for (const tab of tabs) {
-      try {
-        await chrome.tabs.sendMessage(tab.id, { type: 'SHOW_DHIKR', idx: _dhikrIdx });
-      } catch (_) { /* tab may not have content script */ }
-    }
-    _dhikrIdx = (_dhikrIdx + 1) % 10;
-  }
 });
 
-// Midnight reset alarm
 chrome.alarms.create('midnight-reset', {
   when: (() => { const m = new Date(); m.setHours(24,0,0,0); return m.getTime(); })(),
   periodInMinutes: 24 * 60
 });
 
-// Init dhikr alarm on startup
-scheduleDhikrAlarm();
+chrome.runtime.onStartup.addListener(() => {
+  dmsArmed = true;
+  lockBrowser();
+});
 
-// Re-schedule on install and browser startup
-chrome.runtime.onInstalled.addListener(scheduleDhikrAlarm);
-chrome.runtime.onStartup.addListener(scheduleDhikrAlarm);
+chrome.runtime.onInstalled.addListener(() => {});
